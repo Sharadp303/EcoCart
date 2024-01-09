@@ -9,6 +9,13 @@ const crypto = require('crypto')
 async function registerUser(req,res){
     try{
         const {name,email,password}=req.body
+        if(!email || !password || !name){
+            return res.status(400).json({error:"Please enter name, email and password"})
+        }
+        if(password.length<=6){
+            return res.status(400).json({error:"Your password must be longer than 6 characters"})
+        }
+
         const hashPassword =await bcrypt.hash(password,10)
         const user=await User.create({
             name,email,password:hashPassword
@@ -20,6 +27,10 @@ async function registerUser(req,res){
     }
     catch(error){
         console.log(error)
+        if (error.code === 11000) {
+            const message = `Duplicate ${Object.keys(error.keyValue)} entered.`;
+            error.message=message;
+          }
         res.status(500).json({error:error.message})
     }
 
