@@ -82,6 +82,7 @@ async function logout(req,res){
           res.status(200).json({
             message: "Logged Out",
           });
+          console.log("LOGOUT_______");
     }
     catch(error){
         console.log(error)
